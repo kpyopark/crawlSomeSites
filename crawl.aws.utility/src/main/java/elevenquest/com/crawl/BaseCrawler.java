@@ -43,19 +43,25 @@ public class BaseCrawler {
     return obj;
   }
 
-  public static String crawlSite(String uri) throws IOException, InterruptedException {
+  public static Map<String, String> getDefaultHeader() {
     HashMap<String, String> defaultHeader = new HashMap<String, String>();
-    defaultHeader.put("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-    defaultHeader.put("Accept-Encoding","gzip, deflate, br");
-    defaultHeader.put("Accept-Language","ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
+    defaultHeader.put("Accept",
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+    defaultHeader.put("Accept-Encoding", "gzip, deflate, br");
+    defaultHeader.put("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
     // defaultHeader.put("Host","www.yanolja.com");
-    defaultHeader.put("Sec-Fetch-Dest","document");
-    defaultHeader.put("Sec-Fetch-Mode","navigate");
-    defaultHeader.put("Sec-Fetch-Site","same-origin");
-    defaultHeader.put("Sec-Fetch-User","1");
-    defaultHeader.put("Upgrade-Insecure-Requests","1");
-    defaultHeader.put("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36");
-    return crawlSite(uri, defaultHeader);
+    defaultHeader.put("Sec-Fetch-Dest", "document");
+    defaultHeader.put("Sec-Fetch-Mode", "navigate");
+    defaultHeader.put("Sec-Fetch-Site", "same-origin");
+    defaultHeader.put("Sec-Fetch-User", "1");
+    defaultHeader.put("Upgrade-Insecure-Requests", "1");
+    defaultHeader.put("User-Agent",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36");
+    return defaultHeader;
+  }
+
+  public static String crawlSite(String uri) throws IOException, InterruptedException {
+    return crawlSite(uri, getDefaultHeader());
   }
 
   public static String crawlSiteWithUnzip(String uri, Map<String, String> headers) throws IOException, InterruptedException {

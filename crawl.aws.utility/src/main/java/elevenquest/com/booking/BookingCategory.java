@@ -4,10 +4,10 @@ public enum BookingCategory {
 
   MOTEL("/motel"),
   HOTEL("/hotel"),
-  PESION("/pension"),
+  PENSION("/pension"),
   GUEST("/guest-house"),
-  LEISURE("/leisure"),
-  GLOBAL("/global/place")
+  //LEISURE("/leisure"),
+  //GLOBAL("/global/place")
   ;
 
   BookingCategory(String uri) {
