@@ -31,17 +31,6 @@ public class BookingSiteMainCrawler extends BaseCrawler {
 
   public static final String SITE_HOUSE_ELEM_XPATH = "//*[@id=\"__next\"]/div[2]/section/div/div/div[]/a";
 
-  static String pattern = "yyyy-MM-dd";
-  static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-
-  private static String getTodayStr() {
-    return simpleDateFormat.format(new java.util.Date());
-  }
-
-  private static String getTommorowStr() {
-    return simpleDateFormat.format(new java.util.Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24));
-  }
-
   public static String getUriFromCategoryAndPosition(BookingCategory category, int position) {
     switch(category) {
       case MOTEL:
@@ -56,40 +45,26 @@ public class BookingSiteMainCrawler extends BaseCrawler {
     return null;
   }
   
-  private static Map<String, String> getDefaultApiHeader(int position) {
-    Map<String, String> defaultHeader = new HashMap<String, String>();
-    defaultHeader.put("Accept", "application/json, text/plain, */*");
-    defaultHeader.put("Accept-Encoding", "gzip, deflate, br");
-    defaultHeader.put("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
-    defaultHeader.put("Sec-Fetch-Dest", "empty");
-    defaultHeader.put("Sec-Fetch-Mode", "cors");
-    defaultHeader.put("Sec-Fetch-Site", "same-origin");
-    defaultHeader.put("User-Agent",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36");
-    defaultHeader.put("X-Requested-With", "XMLHttpRequest");
-    return defaultHeader;
-  }
-
   private static Map<String, String> getHotelApiHeader(int position) {
-    Map<String, String> defaultHeader = getDefaultApiHeader(position);
+    Map<String, String> defaultHeader = getDefaultApiHeader();
     defaultHeader.put("Referer", String.format(SITE_HOTEL_MAIN, position));
     return defaultHeader;
   }
 
   private static Map<String,String> getMotelApiHeader(int position) {
-    Map<String, String> defaultHeader = getDefaultApiHeader(position);
+    Map<String, String> defaultHeader = getDefaultApiHeader();
     defaultHeader.put("Referer", String.format(SITE_MOTEL_MAIN, position));
     return defaultHeader;
   }
 
   private static Map<String, String> getGuestApiHeader(int position) {
-    Map<String, String> defaultHeader = getDefaultApiHeader(position);
+    Map<String, String> defaultHeader = getDefaultApiHeader();
     defaultHeader.put("Referer", String.format(SITE_GUEST_MAIN, position));
     return defaultHeader;
   }
 
   private static Map<String, String> getPensionApiHeader(int position) {
-    Map<String, String> defaultHeader = getDefaultApiHeader(position);
+    Map<String, String> defaultHeader = getDefaultApiHeader();
     defaultHeader.put("Referer", String.format(SITE_PENSION_MAIN, position));
     return defaultHeader;
   }
@@ -153,6 +128,8 @@ public class BookingSiteMainCrawler extends BaseCrawler {
     hotels.forEach(hotel -> {
       JSONObject hotelObj = (JSONObject)hotel;
       HouseInfo info = new HouseInfo();
+      info.category = category;
+      info.regionCode = position;
       info.title = hotelObj.getString("title");
       info.ratio = hotelObj.getString("reviewStar");
       info.reviewCount = hotelObj.getString("ownerReplyCount");
