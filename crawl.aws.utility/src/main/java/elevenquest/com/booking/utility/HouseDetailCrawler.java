@@ -1,12 +1,15 @@
 package elevenquest.com.booking.utility;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import elevenquest.com.booking.HouseInfo;
+import elevenquest.com.booking.ImageInfo;
 import elevenquest.com.crawl.BaseCrawler;
 
 public class HouseDetailCrawler extends BaseCrawler {
@@ -23,14 +26,18 @@ public class HouseDetailCrawler extends BaseCrawler {
     String jsonBody = crawlSiteWithUnzip(getHouseDetailUri(houseInfo), headers);
     JSONObject json = toJson(jsonBody);
     JSONArray rooms = json.getJSONArray("rooms");
+    HashMap<String, ImageInfo> uniqueImageInfos = new HashMap<String, ImageInfo>();
     rooms.forEach(roomjson -> {
       JSONObject photojson = ((JSONObject)roomjson).getJSONObject("photo");
-      houseInfo.imageUris.add(photojson.getJSONObject("representative").getString("uri"));
+      String uri = photojson.getJSONObject("representative").getString("uri");
+      uniqueImageInfos.put(uri.hashCode() + "", new ImageInfo(uri, "Y"));
       JSONArray images = photojson.getJSONArray("items");
       images.forEach(imagejson -> {
-        houseInfo.imageUris.add(((JSONObject)imagejson).getString("uri"));
+        String imageuri = ((JSONObject)imagejson).getString("uri");
+        uniqueImageInfos.put(imageuri.hashCode() + "", new ImageInfo(imageuri, "N"));
       });
     });
+    houseInfo.imageUris = new ArrayList<ImageInfo>(uniqueImageInfos.values());
     // printPrettyJson(jsonBody);
   }
 

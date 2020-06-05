@@ -1,13 +1,9 @@
 package elevenquest.com.booking.utility;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.htmlcleaner.TagNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,10 +27,10 @@ public class BookingSiteMainCrawler extends BaseCrawler {
 
   public static final String SITE_HOUSE_ELEM_XPATH = "//*[@id=\"__next\"]/div[2]/section/div/div/div[]/a";
 
-  public static String getUriFromCategoryAndPosition(BookingCategory category, int position) {
+  private static String getUriFromCategoryAndPosition(BookingCategory category, int position) {
     switch(category) {
       case MOTEL:
-        return String.format(SITE_MOTEL_API, getTodayStr(), getTodayStr(), position);
+        return String.format(SITE_MOTEL_API, getTodayStr(), getTommorowStr(), position);
       case HOTEL:
         return String.format(SITE_HOTEL_API, getTodayStr(), getTommorowStr(), position);
       case GUEST:
@@ -69,19 +65,8 @@ public class BookingSiteMainCrawler extends BaseCrawler {
     return defaultHeader;
   }
 
-  /**
-   * This method for parsing original Html element of specific booking site. 
-   * But some sites are only using API service to retrieve detail information of hotel. 
-   * 
-   * So we couldn't use this function to parse HTML body. 
-   * 
-   * 
-   * @deprecated
-   * @param top100uri
-   * @return
-   * @throws Exception
-   */
-  public static List<HouseInfo> getHouseInfos(String uri) throws Exception {
+  /*
+  private static List<HouseInfo> getHouseInfos(String uri) throws Exception {
     List<HouseInfo> rtn = new Vector<HouseInfo>();
     TagNode rootNode = cleanHtml(crawlSite(uri));
     TagNode[] houseInfos = evalList(rootNode, SITE_HOUSE_ELEM_XPATH);
@@ -93,8 +78,9 @@ public class BookingSiteMainCrawler extends BaseCrawler {
     });
     return rtn;
   }
+  */
 
-  public static List<HouseInfo> getHouseInfoFromJson(BookingCategory category, int position) throws Exception {
+  public static List<HouseInfo> getHouseInfoFromJson(BookingCategory category, String region, int position) throws Exception {
     List<HouseInfo> rtn = new Vector<HouseInfo>();
     Map<String, String> headers = null;
     switch(category) {
@@ -130,6 +116,7 @@ public class BookingSiteMainCrawler extends BaseCrawler {
       HouseInfo info = new HouseInfo();
       info.category = category;
       info.regionCode = position;
+      info.region = region;
       info.title = hotelObj.getString("title");
       info.ratio = hotelObj.getString("reviewStar");
       info.reviewCount = hotelObj.getString("ownerReplyCount");
@@ -144,7 +131,7 @@ public class BookingSiteMainCrawler extends BaseCrawler {
     // List<HouseInfo> houses = getHouseInfoFromJson(BookingCategory.MOTEL, 910001);
     // List<HouseInfo> houses = getHouseInfoFromJson(BookingCategory.HOTEL, 910161);
     // List<HouseInfo> houses = getHouseInfoFromJson(BookingCategory.GUEST, 900119);
-    List<HouseInfo> houses = getHouseInfoFromJson(BookingCategory.PENSION, 900622);
+    List<HouseInfo> houses = getHouseInfoFromJson(BookingCategory.PENSION, "속초/양평", 900622);
     houses.forEach(house -> System.out.println(house.title + ":" + house.relUriPath));
   }
 

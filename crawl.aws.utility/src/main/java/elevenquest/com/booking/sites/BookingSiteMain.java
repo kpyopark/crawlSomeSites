@@ -1,8 +1,6 @@
 package elevenquest.com.booking.sites;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XPatherException;
@@ -25,7 +23,12 @@ public class BookingSiteMain {
     return (TagNode)(parentNode.evaluateXPath(xPath)[0]);
   }
 
+  /**
+   * @deprecated
+   * @throws XPatherException
+   */
   private void parse() throws XPatherException {
+    /*
     Object[] motelList = rootNode.evaluateXPath(HOTEL_LIST_XPATH);
     Vector<BookingSiteMain> rtn = new Vector<BookingSiteMain>();
     Arrays.stream(motelList).forEach(motelInfo -> {
@@ -45,6 +48,7 @@ public class BookingSiteMain {
       // *[@id="__next"]/div[2]/section/div/div/div[1]/a/div[2]/div[2]/span[1]/text()  --> ratio
       //*[@id="__next"]/div[2]/section/div/div/div[1]/a/div[2]/div[2]/span[2]/b --> review count
     });
+    */
   }
 
   public String hotelName;

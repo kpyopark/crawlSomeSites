@@ -21,6 +21,10 @@ public class BookingCategoryExt {
   //public static BookingCategoryExt MOTEL
   BookingCategory category;
 
+  public BookingCategory getCategory() {
+    return this.category;
+  }
+
   private BookingCategoryExt(BookingCategory category, String[] regions, int[] points) {
     if(regions == null || points == null || regions.length != points.length)
       throw new RuntimeException("Wrong category info. You should check region/points arraies are null or mismatched.");
@@ -42,7 +46,7 @@ public class BookingCategoryExt {
     this.category = category;
     Map<Integer, String> regions = new HashMap<Integer, String>();    // if you this variable to set null, you need more codes. 
     try {
-      BookingCategoryCrawler.getRegionCode(category);
+      regions = BookingCategoryCrawler.getRegionCode(category);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -55,8 +59,13 @@ public class BookingCategoryExt {
   public void addEntry(int code, String region) {
     this.points.add(new Entry(code, region));
   }
-  public List<Entry> getPoints() {
-    return this.points;
+  public Map<Integer, String> getPoints() {
+    Map<Integer, String> rtn = new HashMap<Integer, String>();
+    this.points.forEach(entry -> {
+      Entry entryObj = (Entry)entry;
+      rtn.put(entryObj.code, entryObj.region);
+    });
+    return rtn;
   }
 
   public static BookingCategoryExt MOTEL = new BookingCategoryExt(BookingCategory.MOTEL);
