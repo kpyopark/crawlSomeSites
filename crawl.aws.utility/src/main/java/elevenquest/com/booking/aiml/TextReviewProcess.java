@@ -6,6 +6,8 @@ import com.amazonaws.services.comprehend.AmazonComprehend;
 import com.amazonaws.services.comprehend.AmazonComprehendClientBuilder;
 import com.amazonaws.services.comprehend.model.DetectKeyPhrasesRequest;
 import com.amazonaws.services.comprehend.model.DetectKeyPhrasesResult;
+import com.amazonaws.services.comprehend.model.DetectSentimentRequest;
+import com.amazonaws.services.comprehend.model.DetectSentimentResult;
 import com.amazonaws.services.comprehend.model.KeyPhrase;
 import com.amazonaws.services.translate.AmazonTranslate;
 import com.amazonaws.services.translate.AmazonTranslateClientBuilder;
@@ -24,11 +26,30 @@ public class TextReviewProcess {
         .withText(review)
         .withLanguageCode(languageCode);
       result = comprehendClient.detectKeyPhrases(request);
+      DetectSentimentRequest sentimentRequest = new DetectSentimentRequest()
+        .withText(review)
+        .withLanguageCode(languageCode);
     } catch (Throwable thr) {
       thr.printStackTrace();
       return null;
     }
     return result.getKeyPhrases();
+  }
+
+  public static DetectSentimentResult extractSentiment(String review, String languageCode) {
+    System.out.println("Extraction key phrases... " + (++extractCount));
+    DetectSentimentResult result = null;
+    try {
+      AmazonComprehend comprehendClient = AmazonComprehendClientBuilder.defaultClient();
+      DetectSentimentRequest sentimentRequest = new DetectSentimentRequest()
+        .withText(review)
+        .withLanguageCode(languageCode);
+      result = comprehendClient.detectSentiment(sentimentRequest);
+    } catch (Throwable thr) {
+      thr.printStackTrace();
+      return null;
+    }
+    return result;
   }
 
   private static long transCount = 0;
